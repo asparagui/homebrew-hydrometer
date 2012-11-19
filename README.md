@@ -42,7 +42,7 @@ Currently hydrometer supports two options:
 
 You're more than welcome to run the script interactively, but you'll probably want something like:
 
-	python3 hydrometer -s > sourceforge_updates.txt
+	python3 hydrometer.py -s > sourceforge_updates.txt
 
 The end result will be a file that contains:
 
