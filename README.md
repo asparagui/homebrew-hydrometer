@@ -37,8 +37,9 @@ Basic usage
 
 Currently hydrometer supports two options:
 
-	-s, --sourceforge:  this will scan for sourceforge updates in homebrew (~500 packages)
-	-g, --googlecode:  this will scan for googlecode updates in homebrew (~160 packages)
+	-s, --sourceforge:  this will scan for sourceforge updates (~500 packages)
+	-c, --googlecode:  this will scan for googlecode updates (~160 packages)
+	-g, --gnuftp:  this will scan for gnu ftpmirror updates (~70 packages)
 
 You're more than welcome to run the script interactively, but you'll probably want something like:
 
@@ -66,7 +67,7 @@ The googlecode parser is a bit garish, I know.
 
 The other two good targets for updates are:
 
-	gnu/savannah (~220 packages)
+	gnu (non-ftpmirror)/savannah (~150 packages)
 	github (~220 packages)
 
 

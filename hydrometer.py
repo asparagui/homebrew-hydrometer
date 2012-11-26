@@ -96,12 +96,48 @@ def googlecode_parse(line):
 
 
 
+def gnumirror_parse(line):
+
+    m = re.search('(?<=org/)\w+', line)
+    
+    if m:
+
+        url = 'http://ftpmirror.gnu.org/' + m.group(0) + '/?C=M;O=D'
+        
+        req = Request(url)
+        try:
+            response = urlopen(req)
+        except HTTPError as e:
+            print('The server couldn\'t fulfill the request.')
+            print('Error code: ', e.code)
+        except URLError as e:
+            print('We failed to reach a server.')
+            print('Reason: ', e.reason)
+            
+        else:            
+            data = response.read()
+            
+            if data:
+                soup = BeautifulSoup(data)
+                
+                print ('\n\n\n\n')
+                print (line)
+                
+                for dl in soup.find_all("a"):
+                    
+                    print (dl)
+
+
+
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Please specify which source of homebrew packages you wish to parse.')
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-s", "--sourceforge", action="store_true")
-    group.add_argument("-g", "--googlecode", action="store_true")
+    group.add_argument("-c", "--googlecode", action="store_true")
+    group.add_argument("-g", "--gnuftp", action="store_true")
 
     args = parser.parse_args()
         
@@ -128,6 +164,20 @@ if __name__ == "__main__":
     
         for line in package_list:
             googlecode_parse(line)
+
+    elif args.gnuftp:
+        print ('Building a list of files to process, this may take some time...')    
+        process = subprocess.Popen("grep url /usr/local/Library/Formula/*.rb | grep ftpmirror",
+                                     shell=True,
+                                     stdout=subprocess.PIPE )
+        stdout_data = str( process.communicate()[0], encoding='utf8' )
+        
+        package_list = stdout_data.split('\n')
+    
+        for line in package_list:
+            gnumirror_parse(line)
+
+
 
     else:
         print ('No package source specified, halting.  (try --help)')
