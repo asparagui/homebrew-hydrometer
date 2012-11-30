@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/env python3
 
 from bs4 import BeautifulSoup
 
@@ -15,50 +15,52 @@ import argparse
 
 def sourceforge_parse(line):
     
-    m = re.search('(?<=net/)\w+', line)
-
-    if m:
-        
-        name = ''
-        
-        if m.group(0)=='project' or m.group(0)=="projects":
-            m = re.search('(?<='+m.group(0)+'/)\w+', line)
-            if m:
-                name = m.group(0)
-                #print (m.group(0), line)
+    #m = re.search('(?<=net/)\w+', line)
+    
+    pattern = re.compile('(?<=net/)(?P<name>[a-zA-Z0-9\-]+)/')
+    
+    match = pattern.search(line)
+    
+    if match:
+    
+        if match.group('name')=='project' or match.group('name')=='projects' or match.group('name')=='sourceforge':
+            pattern2 = re.compile('(?<=net/)'+match.group('name')+'/(?P<name>[a-zA-Z0-9\-]+)/')
+            match = pattern2.search(line)
+            if match:
+                #print (match.group('name'))
+                sourceforge_read(match.group('name'))
         else:
-            name = m.group(0)
-            #print (m.group(0), line)
-            
-        if name:
-            
-            url = 'http://sourceforge.net/projects/' + name + '/files/'
-        
-            print (url)
-            
+            #print (match.group('name'))
+            sourceforge_read(match.group('name'))
 
-            req = Request(url)
-            try:
-                response = urlopen(req)
-            except HTTPError as e:
-                print('The server couldn\'t fulfill the request.')
-                print('Error code: ', e.code)
-            except URLError as e:
-                print('We failed to reach a server.')
-                print('Reason: ', e.reason)
+
+def sourceforge_read(name):
+    url = 'http://sourceforge.net/projects/' + name + '/files/'
+        
+    print (url)
+
+    req = Request(url)
+    try:
+        response = urlopen(req)
+    except HTTPError as e:
+        print('The server couldn\'t fulfill the request.')
+        print('Error code: ', e.code)
+    except URLError as e:
+        print('We failed to reach a server.')
+        print('Reason: ', e.reason)
             
-            else:            
-                data = response.read()
+    else:            
+        data = response.read()
             
-                if data:
-                    soup = BeautifulSoup(data)
+        if data:
+            soup = BeautifulSoup(data)
             
-                    for dl in soup.find_all("div", class_="download-bar"):
-                        a = dl.contents[1]
+            for dl in soup.find_all("div", class_="download-bar"):
+                a = dl.contents[1]
                     
-                        print (line)
-                        print ('                        ',a.contents[1].contents[1])
-                        print ('\n\n')
+                print (line)
+                print ('                        ',a.contents[1].contents[1])
+                print ('\n\n')
                         
                         
                         

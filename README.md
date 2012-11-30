@@ -35,7 +35,7 @@ If this looks like what you see (no angry messages about errors), you're good to
 Basic usage
 ===
 
-Currently hydrometer supports two options:
+Currently hydrometer supports the following options:
 
 	-s, --sourceforge:  this will scan for sourceforge updates (~500 packages)
 	-c, --googlecode:  this will scan for googlecode updates (~160 packages)
