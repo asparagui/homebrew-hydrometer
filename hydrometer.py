@@ -14,9 +14,7 @@ import subprocess
 import argparse
 
 def sourceforge_parse(line):
-    
-    #m = re.search('(?<=net/)\w+', line)
-    
+        
     pattern = re.compile('(?<=net/)(?P<name>[a-zA-Z0-9\-]+)/')
     
     match = pattern.search(line)
@@ -59,7 +57,7 @@ def sourceforge_read(name):
                 a = dl.contents[1]
                     
                 print (line)
-                print ('                        ',a.contents[1].contents[1])
+                print ('                                                                        ',a.contents[1].contents[1])
                 print ('\n\n')
                         
                         
@@ -132,53 +130,52 @@ def gnumirror_parse(line):
 
 
 
+def package_list(source):    
 
+    process = subprocess.Popen("grep url /usr/local/Library/Formula/*.rb | grep " + source,
+                                 shell=True,
+                                 stdout=subprocess.PIPE )
+    stdout_data = str( process.communicate()[0], encoding='utf8' )
+        
+    package_list = stdout_data.split('\n')
+
+    return package_list
+    
+    
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Please specify which source of homebrew packages you wish to parse.')
+    
     group = parser.add_mutually_exclusive_group()
+    
     group.add_argument("-s", "--sourceforge", action="store_true")
     group.add_argument("-c", "--googlecode", action="store_true")
     group.add_argument("-g", "--gnuftp", action="store_true")
 
     args = parser.parse_args()
         
+    print ('Building a list of files to process, this may take some time...')    
+
     if args.sourceforge:
-        print ('Building a list of files to process, this may take some time...')    
-        process = subprocess.Popen("grep url /usr/local/Library/Formula/*.rb | grep sourceforge",
-                                     shell=True,
-                                     stdout=subprocess.PIPE )
-        stdout_data = str( process.communicate()[0], encoding='utf8' )
         
-        package_list = stdout_data.split('\n')
+        packages = package_list('sourceforge')
     
-        for line in package_list:
+        for line in packages:
             sourceforge_parse(line)
         
     elif args.googlecode:
-        print ('Building a list of files to process, this may take some time...')    
-        process = subprocess.Popen("grep url /usr/local/Library/Formula/*.rb | grep googlecode",
-                                     shell=True,
-                                     stdout=subprocess.PIPE )
-        stdout_data = str( process.communicate()[0], encoding='utf8' )
-        
-        package_list = stdout_data.split('\n')
     
-        for line in package_list:
+        packages = package_list('googlecode')
+    
+        for line in packages:
             googlecode_parse(line)
 
     elif args.gnuftp:
-        print ('Building a list of files to process, this may take some time...')    
-        process = subprocess.Popen("grep url /usr/local/Library/Formula/*.rb | grep ftpmirror",
-                                     shell=True,
-                                     stdout=subprocess.PIPE )
-        stdout_data = str( process.communicate()[0], encoding='utf8' )
-        
-        package_list = stdout_data.split('\n')
     
-        for line in package_list:
+        packages = package_list('ftpmirror')
+        
+        for line in packages:
             gnumirror_parse(line)
-
 
 
     else:
