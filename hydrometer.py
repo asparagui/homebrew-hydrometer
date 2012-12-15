@@ -13,6 +13,25 @@ from subprocess import Popen, PIPE
 import subprocess
 import argparse
 
+def request_url(url):
+    req = Request(url)
+    
+    try:
+        response = urlopen(req)
+        
+    except HTTPError as error:
+        print('The server couldn\'t fulfill the request.')
+        print('Error code: ', error.code)
+    
+    except URLError as error:
+        print('We failed to reach the server.')
+        print('Reason: ', error.reason)
+            
+    else:            
+        data = response.read()
+        return data
+
+
 def sourceforge_parse(line):
         
     pattern = re.compile('(?<=net/)(?P<name>[a-zA-Z0-9\-]+)/')
@@ -20,7 +39,6 @@ def sourceforge_parse(line):
     match = pattern.search(line)
     
     if match:
-    
         if match.group('name')=='project' or match.group('name')=='projects' or match.group('name')=='sourceforge':
             pattern2 = re.compile('(?<=net/)'+match.group('name')+'/(?P<name>[a-zA-Z0-9\-]+)/')
             match = pattern2.search(line)
@@ -34,99 +52,93 @@ def sourceforge_parse(line):
 
 def sourceforge_read(name):
     url = 'http://sourceforge.net/projects/' + name + '/files/'
-        
-    print (url)
+    #print (url)
 
-    req = Request(url)
-    try:
-        response = urlopen(req)
-    except HTTPError as e:
-        print('The server couldn\'t fulfill the request.')
-        print('Error code: ', e.code)
-    except URLError as e:
-        print('We failed to reach a server.')
-        print('Reason: ', e.reason)
+    data = request_url(url)
+   
+    if data:
+        soup = BeautifulSoup(data)
             
-    else:            
-        data = response.read()
-            
-        if data:
-            soup = BeautifulSoup(data)
-            
-            for dl in soup.find_all("div", class_="download-bar"):
-                a = dl.contents[1]
+        for dl in soup.find_all("div", class_="download-bar"):
+            a = dl.contents[1]
                     
-                print (line)
-                print ('                                                                        ',a.contents[1].contents[1])
-                print ('\n\n')
-                        
-                        
-                        
-                        
+            print (line)
+            print ('\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t',a.contents[1].contents[1])
+            print ('\n\n')
+
+
+                  
 def googlecode_parse(line):
 
-     m = re.search('(?<=//)\w+', line)
+     match = re.search('(?<=//)\w+', line)
     
-     if m:
-
-         url = 'http://code.google.com/p/' + m.group(0) + '/downloads/list'
+     if match:
+         url = 'http://code.google.com/p/' + match.group(0) + '/downloads/list'
         
-         req = Request(url)
-         try:
-             response = urlopen(req)
-         except HTTPError as e:
-             print('The server couldn\'t fulfill the request.')
-             print('Error code: ', e.code)
-         except URLError as e:
-             print('We failed to reach a server.')
-             print('Reason: ', e.reason)
-            
-         else:            
-             data = response.read()
-            
-             if data:
-                 soup = BeautifulSoup(data)
+         data = request_url(url)
+   
+         if data:
+             soup = BeautifulSoup(data)
                 
-                 print ('\n\n\n\n')
-                 print (line)
+             print ('\n\n\n\n')
+             print (line)
                 
-                 for dl in soup.find_all("tr",class_='ifOpened'):
-                    
-                     print (dl)
+             for dl in soup.find_all("tr",class_='ifOpened'):
+                 print (dl)
 
 
 
 def gnumirror_parse(line):
+    pattern = re.compile('(?<=net/)(?P<name>[a-zA-Z0-9\-]+)/')
 
     m = re.search('(?<=org/)\w+', line)
     
     if m:
-
+        
         url = 'http://ftpmirror.gnu.org/' + m.group(0) + '/?C=M;O=D'
         
-        req = Request(url)
-        try:
-            response = urlopen(req)
-        except HTTPError as e:
-            print('The server couldn\'t fulfill the request.')
-            print('Error code: ', e.code)
-        except URLError as e:
-            print('We failed to reach a server.')
-            print('Reason: ', e.reason)
+        data = request_url(url)
             
-        else:            
-            data = response.read()
-            
-            if data:
-                soup = BeautifulSoup(data)
+        if data:
+            soup = BeautifulSoup(data)
                 
-                print ('\n\n\n\n')
-                print (line)
+            print ('\n\n\n\n')
+            print (line)
                 
-                for dl in soup.find_all("a"):
-                    
-                    print (dl)
+            for dl in soup.find_all("a"):
+                print (dl)
 
+
+
+def github_parse(line):
+
+    pattern = re.compile('(?<=github.com/)(?P<name>[a-zA-Z0-9\-]+)/(?P<name2>[a-zA-Z0-9\-]+)/')
+    
+    match = pattern.search(line)
+    
+    if match:
+        if match.group('name')=='downloads':
+            pattern2 = re.compile('(?<=github.com/)downloads/(?P<name>[a-zA-Z0-9\-]+)/(?P<name2>[a-zA-Z0-9\-]+)/')
+            match = pattern2.search(line)
+
+    if match:
+        github_read(match.group('name'), match.group('name2'))
+
+
+def github_read(name,name2):
+    url = 'http://github.com/' + name + '/' + name2 + '/tags'
+
+    data = request_url(url)
+        
+    if data:
+        soup = BeautifulSoup(data)
+            
+        for dl in soup.find_all("ol", class_="download-list"):
+            print ('\n\n\n\n\n\n')
+            print (line)
+            
+            for a in dl.find_all("a"):    
+                print (a)
 
 
 
@@ -151,6 +163,7 @@ if __name__ == "__main__":
     group.add_argument("-s", "--sourceforge", action="store_true")
     group.add_argument("-c", "--googlecode", action="store_true")
     group.add_argument("-g", "--gnuftp", action="store_true")
+    group.add_argument("-b", "--github", action="store_true")
 
     args = parser.parse_args()
         
@@ -177,6 +190,12 @@ if __name__ == "__main__":
         for line in packages:
             gnumirror_parse(line)
 
+    elif args.github:
+    
+        packages = package_list('github')
+        
+        for line in packages:
+            github_parse(line)
 
     else:
         print ('No package source specified, halting.  (try --help)')
