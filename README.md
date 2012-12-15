@@ -19,7 +19,7 @@ Now you can install BeautifulSoup, a python3 html parser the scripts rely on:
 
 	pip3 install beautifulsoup4
 
-Goto the terminal type 'python3' to start a new shell.  Then type 'import bs4'.
+Goto the terminal and type 'python3' to start a new shell.  Then type 'import bs4'.
 
 If this looks like what you see (no angry messages about errors), you're good to go!
 
@@ -39,7 +39,7 @@ Currently hydrometer supports the following options:
 	-s, --sourceforge:  this will scan for sourceforge updates (~500 packages)
 	-c, --googlecode:  this will scan for googlecode updates (~160 packages)
 	-g, --gnuftp:  this will scan for gnu ftpmirror updates (~170 packages)
-	-h, --github:  this will scan for github tag updates (~220 packages)
+	-b, --github:  this will scan for github tag updates (~220 packages)
 
 You're more than welcome to run the script interactively, but you'll probably want something like:
 
