@@ -36,19 +36,19 @@ Basic usage
 
 Currently hydrometer supports the following options:
 
-	-s, --sourceforge:  this will scan for sourceforge updates (~500 packages)
-	-c, --googlecode:  this will scan for googlecode updates (~160 packages)
-	-g, --gnuftp:  this will scan for gnu ftpmirror updates (~170 packages)
-	-b, --github:  this will scan for github tag updates (~220 packages)
+	-s, --sourceforge:  scan for sourceforge updates (~500 packages)
+	-c, --googlecode:  scan for googlecode updates (~160 packages)
+	-g, --gnuftp:  scan for gnu ftpmirror updates (~170 packages)
+	-b, --github:  scan for github tag updates (~220 packages)
 
 You're more than welcome to run the script interactively, but you'll probably want something like:
 
-	python3 hydrometer.py -s > sourceforge_updates.txt
+	./hydrometer.py -s > sourceforge_updates.txt
 
 The end result will be a file that contains:
 
 	1) a line from sourceforge packages
-	2) hydrometer's best guess for the cooresponding package's latest version/downloads
+	2) hydrometer's best guess for the corresponding package's latest version/downloads
 	3) some spacing to keep things sane
 
 Now, you just need to look through sourceforge_updates.txt for packages that need updating.
