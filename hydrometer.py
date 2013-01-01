@@ -69,11 +69,13 @@ def sourceforge_read(name):
 
                   
 def googlecode_parse(line):
-
-     match = re.search('(?<=//)\w+', line)
+     
+     pattern = re.compile('(?<=//)(?P<name>[a-zA-Z0-9\-]+)')
+    
+     match = pattern.search(line)
     
      if match:
-         url = 'http://code.google.com/p/' + match.group(0) + '/downloads/list'
+         url = 'http://code.google.com/p/' + match.group('name') + '/downloads/list'
         
          data = request_url(url)
    
@@ -82,7 +84,8 @@ def googlecode_parse(line):
                 
              print ('\n\n\n\n')
              print (line)
-                
+             print ('\n\n')
+             
              for dl in soup.find_all("tr",class_='ifOpened'):
                  print (dl)
 
@@ -91,11 +94,11 @@ def googlecode_parse(line):
 def gnumirror_parse(line):
     pattern = re.compile('(?<=net/)(?P<name>[a-zA-Z0-9\-]+)/')
 
-    m = re.search('(?<=org/)\w+', line)
+    match = re.search('(?<=org/)\w+', line)
     
-    if m:
+    if match:
         
-        url = 'http://ftpmirror.gnu.org/' + m.group(0) + '/?C=M;O=D'
+        url = 'http://ftp.gnu.org/gnu/' + match.group(0) + '/?C=M;O=D'
         
         data = request_url(url)
             
@@ -104,7 +107,8 @@ def gnumirror_parse(line):
                 
             print ('\n\n\n\n')
             print (line)
-                
+            print ('\n\n')
+            
             for dl in soup.find_all("a"):
                 print (dl)
 
@@ -112,28 +116,28 @@ def gnumirror_parse(line):
 
 def github_parse(line):
 
-    pattern = re.compile('(?<=github.com/)(?P<name>[a-zA-Z0-9\-]+)/(?P<name2>[a-zA-Z0-9\-]+)/')
+    pattern = re.compile('(?<=github.com/)(?P<username>[a-zA-Z0-9\-]+)/(?P<projectname>[a-zA-Z0-9\-]+)/')
     
     match = pattern.search(line)
     
     if match:
-        if match.group('name')=='downloads':
-            pattern2 = re.compile('(?<=github.com/)downloads/(?P<name>[a-zA-Z0-9\-]+)/(?P<name2>[a-zA-Z0-9\-]+)/')
+        if match.group('username')=='downloads':
+            pattern2 = re.compile('(?<=github.com/)downloads/(?P<username>[a-zA-Z0-9\-]+)/(?P<projectname>[a-zA-Z0-9\-]+)/')
             match = pattern2.search(line)
 
     if match:
-        github_read(match.group('name'), match.group('name2'))
+        github_read(match.group('username'), match.group('projectname'))
 
-
-def github_read(name,name2):
-    url = 'http://github.com/' + name + '/' + name2 + '/tags'
+    
+def github_read(username, projectname):
+    url = 'http://github.com/' + username + '/' + projectname + '/tags'
 
     data = request_url(url)
         
     if data:
         soup = BeautifulSoup(data)
             
-        for dl in soup.find_all("ol", class_="download-list"):
+        for dl in soup.find_all("ol", class_="release-list"):
             print ('\n\n\n\n\n\n')
             print (line)
             
