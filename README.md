@@ -64,7 +64,6 @@ Future improvements
 ===
 
 The googlecode/github parsers could be made less verbose.
-There are 90 aspell libraries, they could be ignored.
 More error checking, perhaps.
 Things are hardcoded to /usr/local.
 
