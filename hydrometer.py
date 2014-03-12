@@ -162,8 +162,8 @@ if __name__ == "__main__":
 
     group.add_argument("-s", "--sourceforge", action="store_true")
     group.add_argument("-c", "--googlecode", action="store_true")
-    group.add_argument("-g", "--gnuftp", action="store_true")
-    group.add_argument("-b", "--github", action="store_true")
+    group.add_argument("-n", "--gnuftp", action="store_true")
+    group.add_argument("-g", "--github", action="store_true")
 
     args = parser.parse_args()
 
