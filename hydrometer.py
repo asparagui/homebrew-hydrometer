@@ -131,6 +131,8 @@ def github_read(username, projectname):
 
     data = request_url(url)
 
+    dater = True
+
     if data:
         soup = BeautifulSoup(data)
 
@@ -140,7 +142,9 @@ def github_read(username, projectname):
 
             for tr in dl.find_all("tr"):
                 for a in tr.find_all("a"):
-                    print(a)
+                    if (dater):
+                        print(a['href'])
+                        #dater = False
 
 
 def package_list(source):
