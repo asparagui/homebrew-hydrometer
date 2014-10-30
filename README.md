@@ -36,10 +36,10 @@ Basic usage
 
 Currently hydrometer supports the following options:
 
-	-s, --sourceforge:  scan for sourceforge updates (~590 packages)
-	-g, --github:  scan for github tag updates (~650 packages)
-	-c, --googlecode:  scan for googlecode updates (~160 packages)
-	-n, --gnuftp:  scan for gnu ftpmirror updates (~90 packages sans aspell)
+	-s, --sourceforge:  scan for sourceforge updates (~600 packages)
+	-g, --github:  scan for github tag updates (~850 packages)
+	-c, --googlecode:  scan for googlecode updates (~150 packages)
+	-n, --gnuftp:  scan for gnu ftpmirror updates (~80 packages sans aspell)
 
 You're more than welcome to run the script interactively, but you'll probably want something like:
 

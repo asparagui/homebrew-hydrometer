@@ -136,7 +136,7 @@ def github_read(username, projectname):
     if data:
         soup = BeautifulSoup(data)
 
-        for dl in soup.find_all("table", class_="tag-list"):
+        for dl in soup.find_all("table", class_="releases-tag-list"):
             print('\n\n\n\n\n\n')
             print(line)
 
