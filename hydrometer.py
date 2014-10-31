@@ -196,7 +196,7 @@ if __name__ == "__main__":
 
     elif args.github:
 
-        packages = package_list('github')
+        packages = package_list('github | grep -v diff')
 
         for line in packages:
             github_parse(line)

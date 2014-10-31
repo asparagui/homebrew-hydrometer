@@ -37,7 +37,7 @@ Basic usage
 Currently hydrometer supports the following options:
 
 	-s, --sourceforge:  scan for sourceforge updates (~600 packages)
-	-g, --github:  scan for github tag updates (~850 packages)
+	-g, --github:  scan for github tag updates (~750 packages)
 	-c, --googlecode:  scan for googlecode updates (~150 packages)
 	-n, --gnuftp:  scan for gnu ftpmirror updates (~80 packages sans aspell)
 
